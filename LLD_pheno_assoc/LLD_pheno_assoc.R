@@ -1,5 +1,6 @@
 # based on code by A. Kurilshikov
 
+.libPaths("/groups/umcg-tifn/tmp01/users/umcg-agulyaeva/SOFTWARE/R_LIB")
 library(foreach)
 sessionInfo()
 
@@ -7,11 +8,11 @@ sessionInfo()
 
 
 # -------------------- read data --------------------
-crass = read.table("LLD_LLD2_300OB_IBD_crAss_abundance_table_metaphlan_style.txt", header = T, as.is = T)
+crass = read.table("../from_Peregrine/LLD_LLD2_300OB_IBD_crAss_abundance_table_metaphlan_style.txt", header = T, as.is = T)
 
 
 
-linkage_file = read.table("LLD_GTMicrob.txt", as.is = T)
+linkage_file = read.table("../../LLD_LLD2_Info/LLD_GTMicrob.txt", as.is = T)
 
 linkage_file$V2 = paste0("X", linkage_file$V2)
 
@@ -32,7 +33,7 @@ crass3 = crass2[, colSums(crass2 > 0) > nrow(crass2) * 0.05]
 
 pheno <- data.frame(NULL)
 
-pheno_files <- list.files(path = "Pheno_science_imputed_1135/", full.names = T)
+pheno_files <- list.files(path = "../../LLD_LLD2_Info/Pheno_science_imputed_1135/", full.names = T)
 
 for (f in pheno_files) {
 
@@ -47,7 +48,7 @@ pheno2 = pheno[match(linkage_file2$V1, rownames(pheno)), ]
 
 
 
-metaphlan = read.table("LLD_LLD2_300OB_IBD_merged_abundance_table.txt", sep = "\t", row.names = 1, header = T, as.is = T)
+metaphlan = read.table("../from_Peregrine/LLD_LLD2_300OB_IBD_merged_abundance_table.txt", sep = "\t", row.names = 1, header = T, as.is = T)
 
 metaphlan = metaphlan[, colnames(metaphlan) != "NCBI_tax_id"]
 
