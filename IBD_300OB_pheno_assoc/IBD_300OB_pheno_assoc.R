@@ -1,5 +1,6 @@
 # based on code by R.A.A.A. Ruigrok
 
+.libPaths('/groups/umcg-tifn/tmp01/users/umcg-agulyaeva/SOFTWARE/R_LIB')
 library(foreach)
 sessionInfo()
 
@@ -8,20 +9,20 @@ sessionInfo()
 
 # -------------------- read data --------------------
 # samples per cohort
-k <- read.table('../IBD_Info/sample_cohort.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
+k <- read.table('../from_Peregrine/sample_cohort.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
 
 ids_lld_0 <- k$sample_id[k$cohort == 'LLD']
 ids_lld   <- paste0('X', ids_lld_0)
 
 ids_300ob <- k$sample_id[k$cohort == '300OB']
 
-ids_ibd <- read.table('../IBD_Info/selected_ibd_samples.txt', stringsAsFactors = FALSE)[, 1]
+ids_ibd <- read.table('../../IBD_Info/selected_ibd_samples.txt', stringsAsFactors = FALSE)[, 1]
 
 
 
 # crAss abundance
 crass <- read.table(
-    '../LLD_pheno_assoc/LLD_LLD2_300OB_IBD_crAss_abundance_table_metaphlan_style.txt',
+    '../from_Peregrine/LLD_LLD2_300OB_IBD_crAss_abundance_table_metaphlan_style.txt',
     sep = '\t',
     header = TRUE,
     stringsAsFactors = FALSE
@@ -42,7 +43,7 @@ crass <- t(crass)
 
 # microbial abundance
 metaphlan = read.table(
-    '../LLD_pheno_assoc/LLD_LLD2_300OB_IBD_merged_abundance_table.txt',
+    '../from_Peregrine/LLD_LLD2_300OB_IBD_merged_abundance_table.txt',
     sep = '\t',
     row.names = 1,
     header = TRUE,
@@ -60,7 +61,7 @@ metaphlan <- t(metaphlan)
 # LLD phenotypes
 pheno_lld <- data.frame(NULL)
 
-pheno_files <- list.files(path = '../LLD_pheno_assoc/Pheno_science_imputed_1135/', full.names = TRUE)
+pheno_files <- list.files(path = '../../LLD_LLD2_Info/Pheno_science_imputed_1135/', full.names = TRUE)
 
 for (f in pheno_files) {
 
@@ -71,7 +72,7 @@ for (f in pheno_files) {
 
 }
 
-key_lld <- read.table('../LLD_pheno_assoc/LLD_GTMicrob.txt', sep = '\t', stringsAsFactors = FALSE)
+key_lld <- read.table('../../LLD_LLD2_Info/LLD_GTMicrob.txt', sep = '\t', stringsAsFactors = FALSE)
 key_lld$V2 <- paste0('X', key_lld$V2)
 rownames(pheno_lld) <- sapply(rownames(pheno_lld), function (x) key_lld$V2[ key_lld$V1 == x ])
 
@@ -84,7 +85,7 @@ any(is.na(pheno_lld[, 'antrop_gender.F1M2'])) # FALSE
 
 # IBD phenotypes
 pheno_ibd_1 <- read.table(
-    '../IBD_Info/data_from_Renate/LLDIBDMIBS_biomarkers_raw.csv',
+    '../../IBD_Info/data_from_Renate/LLDIBDMIBS_biomarkers_raw.csv',
     sep = ',',
     row.names = 1,
     header = TRUE,
@@ -99,7 +100,7 @@ sum(ids_ibd %in% rownames(pheno_ibd_1)) # 431
 
 
 pheno_ibd_2 <- read.table(
-    '../IBD_Info/data_from_Renate/LLD_IBD_meta_201020.txt',
+    '../../IBD_Info/data_from_Renate/LLD_IBD_meta_201020.txt',
     quote = '',
     sep = '\t',
     row.names = 1,
@@ -107,7 +108,7 @@ pheno_ibd_2 <- read.table(
     stringsAsFactors = FALSE
 )
 
-key_ibd <- read.table('../IBD_Info/rename_IBD.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
+key_ibd <- read.table('../../IBD_Info/rename_IBD.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
 rownames(pheno_ibd_2) <- sapply(rownames(pheno_ibd_2), function (x) ifelse(x %in% key_ibd$Classic[key_ibd$Classic != 'XXXX'], key_ibd$old[key_ibd$Classic == x], x))
 rownames(pheno_ibd_2)[rownames(pheno_ibd_2) == 'XXXX'] <- 'YYYY'
 
@@ -123,11 +124,11 @@ any(is.na(pheno_ibd_2[, 'Sex']))                # FALSE
 
 
 # 300OB phenotypes
-key_300ob <- read.table('../300OB_Info/key_300OB.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
+key_300ob <- read.table('../../300OB_Info/key_300OB.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
 
 
 pheno_300ob_1 <- read.table(
-    '../300OB_Info/300OB_65phenotype.txt',
+    '../../300OB_Info/300OB_65phenotype.txt',
     sep = '\t',
     row.names = 1,
     header = TRUE,
@@ -149,7 +150,7 @@ any(is.na(pheno_300ob_1[, 'sex'])) # FALSE
 
 
 pheno_300ob_2 <- read.table(
-    '../300OB_Info/4tb8spry4b-1/300OB_metabolicSyndrome.txt',
+    '../../300OB_Info/4tb8spry4b-1/300OB_metabolicSyndrome.txt',
     sep = '\t',
     row.names = 1,
     header = TRUE,

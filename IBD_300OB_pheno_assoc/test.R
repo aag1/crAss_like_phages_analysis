@@ -1,10 +1,10 @@
-ids_ibd <- read.table('../IBD_Info/selected_ibd_samples.txt', stringsAsFactors = FALSE)[, 1]
+ids_ibd <- read.table('../../IBD_Info/selected_ibd_samples.txt', stringsAsFactors = FALSE)[, 1]
 
 
 
 
 pheno_ibd_2 <- read.table(
-    '../IBD_Info/data_from_Renate/LLD_IBD_meta_201020.txt',
+    '../../IBD_Info/data_from_Renate/LLD_IBD_meta_201020.txt',
     quote = '',
     sep = '\t',
     row.names = 1,
@@ -12,7 +12,7 @@ pheno_ibd_2 <- read.table(
     stringsAsFactors = FALSE
 )
 
-key_ibd <- read.table('../IBD_Info/rename_IBD.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
+key_ibd <- read.table('../../IBD_Info/rename_IBD.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
 rownames(pheno_ibd_2) <- sapply(rownames(pheno_ibd_2), function (x) ifelse(x %in% key_ibd$Classic[key_ibd$Classic != 'XXXX'], key_ibd$old[key_ibd$Classic == x], x))
 rownames(pheno_ibd_2)[rownames(pheno_ibd_2) == 'XXXX'] <- 'YYYY'
 
