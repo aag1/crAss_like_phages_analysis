@@ -3,9 +3,9 @@ sessionInfo()
 
 
 
-DF <- data.frame(matrix(NA, ncol = 5, nrow = 4), stringsAsFactors = FALSE)
+DF <- data.frame(matrix(NA, ncol = 6, nrow = 4), stringsAsFactors = FALSE)
 rownames(DF) <- c('LLD', 'LLD2', '300OB', 'IBD')
-colnames(DF) <- c('n_samples', 'M_pct', 'F_pct', 'age', 'BMI')
+colnames(DF) <- c('n_samples', 'M_pct', 'F_pct', 'age', 'age_range', 'BMI')
 
 t <- read.table(
     '../from_Peregrine/sample_cohort.txt',
@@ -53,6 +53,7 @@ DF['LLD', 'M_pct'] <- NN(sum(PH[, 'antrop_gender.F1M2'] == 2) / DF['LLD', 'n_sam
 DF['LLD', 'F_pct'] <- NN(sum(PH[, 'antrop_gender.F1M2'] == 1) / DF['LLD', 'n_samples'] * 100)
 
 DF['LLD', 'age'] <- paste(NN(mean(PH[, 'antrop_age'])), '±', NN(sd(PH[, 'antrop_age'])))
+DF['LLD', 'age_range'] <- paste(NN(min(PH[, 'antrop_age'])), '-', NN(max(PH[, 'antrop_age'])))
 
 DF['LLD', 'BMI'] <- paste(NN(mean(PH[, 'antrop_BMI'])), '±', NN(sd(PH[, 'antrop_BMI'])))
 
@@ -96,6 +97,7 @@ DF['LLD2', 'M_pct'] <- NN(sum(PH[, 'antrop_gender.F1M2'] == 2) / DF['LLD2', 'n_s
 DF['LLD2', 'F_pct'] <- NN(sum(PH[, 'antrop_gender.F1M2'] == 1) / DF['LLD2', 'n_samples'] * 100)
 
 DF['LLD2', 'age'] <- paste(NN(mean(PH[, 'antrop_age'])), '±', NN(sd(PH[, 'antrop_age'])))
+DF['LLD2', 'age_range'] <- paste(NN(min(PH[, 'antrop_age'])), '-', NN(max(PH[, 'antrop_age'])))
 
 DF['LLD2', 'BMI'] <- paste(NN(mean(PH[, 'antrop_BMI'])), '±', NN(sd(PH[, 'antrop_BMI'])))
 
@@ -131,6 +133,7 @@ DF['300OB', 'M_pct'] <- NN(sum(PH[, 'sex'] == 2) / DF['300OB', 'n_samples'] * 10
 DF['300OB', 'F_pct'] <- NN(sum(PH[, 'sex'] == 1) / DF['300OB', 'n_samples'] * 100)
 
 DF['300OB', 'age'] <- paste(NN(mean(PH[, 'age'])), '±', NN(sd(PH[, 'age'])))
+DF['300OB', 'age_range'] <- paste(NN(min(PH[, 'age'])), '-', NN(max(PH[, 'age'])))
 
 DF['300OB', 'BMI'] <- paste(NN(mean(PH[, 'BMI'])), '±', NN(sd(PH[, 'BMI'])))
 
@@ -166,6 +169,7 @@ DF['IBD', 'M_pct'] <- NN(sum(PH[, 'Sex'] == 'male') / DF['IBD', 'n_samples'] * 1
 DF['IBD', 'F_pct'] <- NN(sum(PH[, 'Sex'] == 'female') / DF['IBD', 'n_samples'] * 100)
 
 DF['IBD', 'age'] <- paste(NN(mean(PH[, 'AgeAtFecalSampling'])), '±', NN(sd(PH[, 'AgeAtFecalSampling'])))
+DF['IBD', 'age_range'] <- paste(NN(min(PH[, 'AgeAtFecalSampling'])), '-', NN(max(PH[, 'AgeAtFecalSampling'])))
 
 sum(is.na(PH[, 'BMI']))
 DF['IBD', 'BMI'] <- paste(NN(mean(PH[, 'BMI'], na.rm = TRUE)), '±', NN(sd(PH[, 'BMI'], na.rm = TRUE)))
