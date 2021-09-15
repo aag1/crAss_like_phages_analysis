@@ -120,6 +120,8 @@ plot_genera(tr, DF, X1 = 5, X2 = 5.5, all_labels = TRUE, cex_labels = 0.3)
 
 text(x = 5.25, y = Ntip(tr) + 5, labels = 'Genus-level\nclusters')
 
+mtext('TerL-based tree', side = 3, line = -2, cex = 1.25)
+
 dev.off()
 
 
@@ -166,5 +168,7 @@ plot_crass_tree(
 plot_genera(tr, DF, X1 = 5.75, X2 = 6.25, all_labels = TRUE, cex_labels = 0.3)
 
 text(x = 6, y = Ntip(tr) + 5, labels = 'Genus-level\nclusters')
+
+mtext('Portal-based tree', side = 3, line = -2, cex = 1.25)
 
 dev.off()
