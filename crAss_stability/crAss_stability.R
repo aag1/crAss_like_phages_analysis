@@ -1,3 +1,4 @@
+.libPaths('/groups/umcg-tifn/tmp01/users/umcg-agulyaeva/SOFTWARE/R_LIB')
 library(latex2exp)
 library(vegan)
 library(vioplot)
@@ -7,7 +8,7 @@ sessionInfo()
 
 # -------------------- read data --------------------
 DF <- read.table(
-    'CRASS_DB_cl_summary_TRANSL_GROUPS.final.txt',
+    '../from_Peregrine/CRASS_DB_cl_summary_TRANSL_GROUPS.final.txt',
     sep = '\t',
     header = TRUE,
     stringsAsFactors = FALSE
@@ -16,7 +17,7 @@ rownames(DF) <- DF$cl_repres
 
 
 M <- read.table(
-    'LLD_LLD2_300OB_IBD_crAss_abundance_table_metaphlan_style.txt',
+    '../from_Peregrine/LLD_LLD2_300OB_IBD_crAss_abundance_table_metaphlan_style.txt',
     sep = '\t',
     row.names = 1,
     header = TRUE,
@@ -27,7 +28,7 @@ rownames(M) <- sub('^.+\\|g__(.+)$', '\\1', rownames(M))
 
 
 t <- read.table(
-    'sample_cohort.txt',
+    '../from_Peregrine/sample_cohort.txt',
     sep = '\t',
     header = TRUE,
     stringsAsFactors = FALSE
@@ -39,22 +40,12 @@ t <- read.table(
 M1 <- M[, paste0('X', t$sample_id[t$cohort == 'LLD'])]
 
 k1 <- read.table(
-    'LLD_GTMicrob.txt',
+    '../../LLD_LLD2_Info/LLD_GTMicrob.txt',
     sep = '\t',
     row.names = 1,
     header = FALSE,
     stringsAsFactors = FALSE
 )
-
-d1 <- read.table(
-    '20150715_intristic_1135patients_log_imputed.txt',
-    sep = '\t',
-    header = TRUE,
-    row.names = 1,
-    stringsAsFactors = FALSE
-)
-d1$work_id <- k1[rownames(d1), 1]
-d1$work_id <- paste0('X', d1$work_id)
 
 
 
@@ -62,7 +53,7 @@ d1$work_id <- paste0('X', d1$work_id)
 M2 <- M[, t$sample_id[t$cohort == 'LLD2']]
 
 k2 <- read.table(
-    'key_LLD_baseline_fup_338sample_pairs.txt',
+    '../../LLD_LLD2_Info/key_LLD_baseline_fup_338sample_pairs.txt',
     sep = '\t',
     row.names = 3,
     header = TRUE,
@@ -87,94 +78,82 @@ MATCH <- sapply(colnames(M2), function (lld2_work_id) {
 })
 
 colnames(M2) <- MATCH
-
-d1 <- d1[d1$work_id %in% colnames(M2), ]
-
-s_order <- d1$work_id[ order(d1$antrop_age) ]
-
-M1 <- M1[, s_order]
-M2 <- M2[, s_order]
+M1 <- M1[, MATCH]
 
 
 
-# -------------------- plot 1: stability of the individual phages --------------------
+# -------------------- plot stability of the individual phages --------------------
 DF1 <- data.frame(
-    LLD     = sapply(rownames(M1), function (x) sum(M1[x,] > 0)),
-    LLD2    = sapply(rownames(M1), function (x) sum(M2[x,] > 0)),
-    total   = sapply(rownames(M1), function (x) sum((M1[x,] > 0) | (M2[x,] > 0))),
-    lost    = sapply(rownames(M1), function (x) sum((M1[x,] > 0) & (M2[x,] == 0))),
-    aquired = sapply(rownames(M1), function (x) sum((M1[x,] == 0) & (M2[x,] > 0))),
-    stable  = sapply(rownames(M1), function (x) sum((M1[x,] > 0) & (M2[x,] > 0))),
+    LLD_pos  = sapply(rownames(M1), function (x) sum(M1[x,] > 0)),
+    LLD2_pos = sapply(rownames(M1), function (x) sum(M2[x,] > 0)),
+    both_pos_obs = sapply(rownames(M1), function (x) sum((M1[x,] > 0) & (M2[x,] > 0))),
     stringsAsFactors = FALSE
 )
+DF1$both_pos_exp <- ncol(M1) * (DF1$LLD_pos / ncol(M1)) * (DF1$LLD2_pos / ncol(M1))
 
 
-sele <- which((DF1$LLD > ncol(M1)*0.1) | (DF1$LLD2 > ncol(M1)*0.1))
+sele <- which((DF1$LLD_pos > ncol(M1)*0.1) | (DF1$LLD2_pos > ncol(M1)*0.1))
 DF1 <- DF1[sele, ]  # select phages present in >10% samples
 
 
-for (x in c('lost', 'aquired', 'stable')) { DF1[, x] <- DF1[, x] / DF1$total * 100 }
-df1 <- DF1[, c('lost', 'aquired', 'stable')]
-
-
-pdf('crAss_stability_1.pdf', height = 3.3, width = 7.5)
+pdf('crAss_stability.pdf', height = 3.3, width = 7.5)
 layout(matrix(1:2, ncol = 2))
 
+par(mar = c(2.25, 4.5, 2.75, 2), ps = 9)
 
-Yaxis2 <- pretty(c(0, max(DF1$total)))
-par(mar = c(2.25, 3.5, 2.75, 3.5), mgp = c(3, 0.7, 0), ps = 9)
-
-
-bp <- barplot(
-    t(as.matrix(df1)),
-    space = 0,
-    border = NA,
-    col = c('forestgreen', 'lightcoral', 'grey90'),
-    names = rep('', nrow(df1)),
-    axes = FALSE, ann = FALSE
+plot(
+    NA,
+    xlim = c(0, nrow(DF1)),
+    ylim = c(0, 100),
+    xaxs = 'i', yaxs = 'i',
+    xaxt = 'n',
+    las = 1,
+    bty = 'n',
+    ann = FALSE
 )
 
-for (i in 1:nrow(df1)) {
+mtext(side = 2, line = 2.25, text = 'Individuals positive in both timepoints', cex = 10/9)
 
-    x <- rownames(df1)[i]
+points(
+    x = 1:nrow(DF1),
+    y = DF1$both_pos_exp,
+    pch = 4,
+    cex = 0.75,
+    xpd = TRUE
+)
+
+points(
+    x = 1:nrow(DF1),
+    y = DF1$both_pos_obs,
+    pch = 16,
+    cex = 0.75,
+    xpd = TRUE
+)
+
+for (i in 1:nrow(DF1)) {
+
+    x <- rownames(DF1)[i]
     g <- sub('[0-9]+$', '', x)
     n <- sub('^[a-z]+', '', x)
-    text(x = bp[i], y = -5, labels = TeX(paste0('$\\', g, '$', n)), adj = 1, srt = 90, xpd = TRUE)
+    text(x = i, y = -5, labels = TeX(paste0('$\\', g, '$', n)), adj = 1, srt = 90, xpd = TRUE)
 
 }
 
-lines(x = bp, y = DF1$total / max(Yaxis2) * 100, lwd = 1.5)
-
-axis(side = 2, pos = bp[1] - 0.5, las = 1)
-axis(side = 4, pos = bp[length(bp)] + 0.5, at = Yaxis2 / max(Yaxis2) * 100, labels = Yaxis2, las = 1)
-
-mtext(side = 2, line = 1.75, text = 'Total positive individuals, %', cex = 10/9)
-text(x = par()$usr[2] + diff(par()$usr[1:2])*0.2, y = 50, labels = 'Total positive individuals', srt = -90, xpd = TRUE, cex = 10/9)
-
 legend(
-    x = par()$usr[1] + diff(par()$usr[1:2])*0.5,
-    y = 118,
-    fill = c('forestgreen', 'lightcoral', 'grey90'),
-    legend = c('Baseline', 'Follow-up', 'Both'),
-    ncol = 3,
-    cex = 0.72,
-    xjust = 0.5, xpd = TRUE,
+    'top',
+    inset = -0.2,
+    pch = c(4, 16),
+    pt.cex = 0.75,
+    legend = c('expected', 'observed'),
+    ncol = 2,
+    xpd = TRUE
 )
 
 mtext('A', side = 3, line = 1, at = -3.8, family = 'sans', cex = 12/9 * 2, xpd = TRUE)
 
 
 
-# -------------------- numbers: stability of the individual phages --------------------
-mean_stable <- mean(df1$stable)
-cat('\nMean % stable samples:', mean_stable, '\n')
-
-idx <- which(df1$stable > 50)
-cat('Phages stable in >50% samples:', paste(rownames(df1)[idx], collapse = ', '), '\n\n')
-
-
-
-# -------------------- plot 1: stability of the overal phage composition --------------------
+# -------------------- plot stability of the overal phage composition --------------------
 m <- t(M)
 m <- m[,colSums(m)>0]
 m <- m[rowSums(m)>0,]
@@ -204,7 +183,7 @@ W1 <- wilcox.test(V3, V1, alternative = 'less', paired = FALSE)
 W2 <- wilcox.test(V3, V2, alternative = 'less', paired = FALSE)
 
 
-par(mar = c(2.25, 6.5, 2.75, 0.5))
+par(mar = c(2.25, 5.5, 2.75, 0.5))
 
 vioplot(
     V3, V1, V2,
@@ -230,7 +209,7 @@ text(x = 1.5, y = 1.09, labels = formatC(W1$p.value, format = 'e', digits = 2), 
 lines(x = c(1, 3), y = rep(1.18, 2), xpd = TRUE)
 text(x = 2, y = 1.21, labels = formatC(W2$p.value, format = 'e', digits = 2), cex = 8/9, xpd = TRUE)
 
-mtext('B', side = 3, line = 1, at = -0.5, family = 'sans', cex = 12/9 * 2, xpd = TRUE)
+mtext('B', side = 3, line = 1, at = -0.55, family = 'sans', cex = 12/9 * 2, xpd = TRUE)
 
 dev.off()
 
@@ -289,61 +268,3 @@ taxa <- rownames(M)[ (M[, samples[1]] > 0) | (M[, samples[2]] > 0) ]
 M[taxa, samples, drop = FALSE]
 
 cat('\n\n')
-
-
-
-# -------------------- plot 2: stability in individuals --------------------
-DF2 <- data.frame(
-    total   = sapply(colnames(M1), function (x) sum((M1[,x] > 0) | (M2[,x] > 0))),
-    lost    = sapply(colnames(M1), function (x) sum((M1[,x] > 0) & (M2[,x] == 0))),
-    aquired = sapply(colnames(M1), function (x) sum((M1[,x] == 0) & (M2[,x] > 0))),
-    stable  = sapply(colnames(M1), function (x) sum((M1[,x] > 0) & (M2[,x] > 0))),
-    stringsAsFactors = FALSE
-)
-
-
-sele <- which(DF2$total > 0)
-DF2 <- DF2[sele, ]
-DF2 <- DF2[order(DF2$total, DF2$stable, DF2$aquired, decreasing = TRUE), ]
-
-
-for (x in c('lost', 'aquired', 'stable')) { DF2[, x] <- DF2[, x] / DF2$total * 100 }
-df2 <- DF2[, c('lost', 'aquired', 'stable')]
-
-
-pdf('crAss_stability_2.pdf', width = 3.3, height = 3.3)
-
-
-Yaxis2 <- pretty(c(0, max(DF2$total)))
-par(mar = c(2.25, 3, 2.75, 2.5), mgp = c(3, 0.7, 0), ps = 9)
-
-
-bp <- barplot(
-    t(as.matrix(df2)),
-    space = 0,
-    border = NA,
-    col = c('forestgreen', 'lightcoral', 'grey90'),
-    names = rep('', nrow(df2)),
-    axes = FALSE, ann = FALSE
-)
-
-lines(x = bp, y = DF2$total / max(Yaxis2) * 100)
-
-axis(side = 2, pos = bp[1] - 0.5, las = 1)
-axis(side = 4, pos = bp[length(bp)] + 0.5, at = Yaxis2 / max(Yaxis2) * 100, labels = Yaxis2, las = 1)
-
-mtext(side = 1, line = 0.75, text = paste(length(sele), 'individuals'), cex = 10/9)
-mtext(side = 2, line = 1.75, text = 'Total phages detected, %', cex = 10/9)
-text(x = par()$usr[2] + diff(par()$usr[1:2])*0.15, y = 50, labels = 'Total phages detected', srt = -90, xpd = TRUE, cex = 10/9)
-
-legend(
-    x = par()$usr[1] + diff(par()$usr[1:2])*0.5,
-    y = 118,
-    fill = c('forestgreen', 'lightcoral', 'grey90'),
-    legend = c('Baseline', 'Follow-up', 'Both'),
-    ncol = 3,
-    cex = 0.72,
-    xjust = 0.5, xpd = TRUE,
-)
-
-dev.off()
