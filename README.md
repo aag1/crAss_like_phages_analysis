@@ -12,6 +12,8 @@
 
 * __map_reads__ -- map reads to crAss-like genomes
 
+* __plot_abundance_matrices__ -- plot abundance matrices next to a tree
+
 * __RNAp_recombination__ -- explore the read coverage anomaly
 
 * __crAss_hosts__ -- predict hosts of crAss-like phages
