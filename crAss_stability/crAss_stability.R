@@ -176,7 +176,8 @@ MATCH <- MATCH[MATCH %in% rownames(D)]
 MATCH <- MATCH[names(MATCH) %in% rownames(D)]
 V3 <- sapply(seq_along(MATCH), function (i) D[MATCH[i], names(MATCH)[i]])
 
-cat('\n# datapoints for violinl plot:', length(V3), length(V1), length(V2), '\n\n')
+cat('\n# datapoints for violin plot:', length(V3), length(V1), length(V2), '\n\n')
+save(V1, V2, V3, file = 'crass_violin_plot_data.RData')
 
 
 W1 <- wilcox.test(V3, V1, alternative = 'less', paired = FALSE)

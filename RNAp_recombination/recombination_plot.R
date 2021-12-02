@@ -112,6 +112,8 @@ L <- lapply(other_seq, function (X) {
 
 names(L) <- other_seq
 
+save(L, file = 'delta27_OLNE01000081_simplot_data.RData')
+
 
 
 

@@ -87,5 +87,6 @@ rm OLNE01000081_TAGq_VS_crassfamily_profiles.out
 rm IAS_proteome.p*
 chmod 440 OLNE01000081_VS_crassfamily_profiles*
 chmod 440 OLNE01000081_VS_IAS_proteome*
+chmod 440 delta27_OLNE01000081_simplot_data.RData
 chmod 440 delta27_vOTUs_palette.rds
 chmod 440 RNAp_recombination_plot.pdf
