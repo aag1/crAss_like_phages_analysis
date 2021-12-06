@@ -202,7 +202,7 @@ text(
     xpd = TRUE
 )
 
-mtext(side = 2, line = 2.25, text = 'Bray-Curtis distance', cex = 10/9)
+mtext(side = 2, line = 2.25, text = 'Bray-Curtis dissimilarity', cex = 10/9)
 
 lines(x = c(1, 2), y = rep(1.06, 2), xpd = TRUE)
 text(x = 1.5, y = 1.09, labels = formatC(W1$p.value, format = 'e', digits = 2), cex = 8/9, xpd = TRUE)
@@ -222,7 +222,7 @@ cat('\nIntra-individual BC vs. LLD BC p-value:', W1$p.value, '\n')
 cat('\nIntra-individual BC vs. FUP BC p-value:', W2$p.value, '\n\n')
 
 
-# inquiry into low inter-individual BC distances
+# inquiry into low inter-individual BC dissimilarities
 pdf('boxplots_test.pdf')
 
 boxplot(
