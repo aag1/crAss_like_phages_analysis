@@ -17,6 +17,11 @@ for (f in pheno_files) {
 
 }
 
+colnames(dat)[colnames(dat) == 'parasympathicolytic_inhaler'] <- 'parasympatholytic_inhaler'
+colnames(dat)[colnames(dat) == 'antrop_heupomtrek'] <- 'antrop_hip.circ'
+colnames(dat)[colnames(dat) == 'how_often_milk_or_sourmilk'] <- 'how_often_milk_or_buttermilk'
+colnames(dat)[colnames(dat) == 'how_often_chocomilk_sweetend_milk_drinks'] <- 'how_often_chocomilk_sweetened_milk_drinks'
+
 
 tab <- read.table(
     'Zhernakova_Table_S1.txt',
@@ -27,6 +32,7 @@ tab <- read.table(
     comment.char = '',
     stringsAsFactors = F
 )
+tab$Factor.[tab$Factor. == 'how_often_milk_or_butterrmilk'] <- 'how_often_milk_or_buttermilk'
 
 
 
@@ -58,7 +64,7 @@ for (i in 1:nrow(tab)) {
 
         } else {
 
-            cat('Unrecognized phenotype :', tab$Factor.[i], '\n')
+            stop('Unrecognized phenotype :', tab$Factor.[i], '\n')
 
         }
 

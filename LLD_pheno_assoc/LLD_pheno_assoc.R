@@ -1,4 +1,4 @@
-# based on code by A. Kurilshikov
+# Script written by A. Gulyaeva; based on code by A. Kurilshikov
 
 .libPaths("/groups/umcg-tifn/tmp01/users/umcg-agulyaeva/SOFTWARE/R_LIB")
 library(foreach)
@@ -43,6 +43,11 @@ for (f in pheno_files) {
     if (ncol(pheno) == 0) { pheno <- df } else { pheno <- cbind(pheno, df) }
 
 }
+
+colnames(pheno)[colnames(pheno) == 'parasympathicolytic_inhaler'] <- 'parasympatholytic_inhaler'
+colnames(pheno)[colnames(pheno) == 'antrop_heupomtrek'] <- 'antrop_hip.circ'
+colnames(pheno)[colnames(pheno) == 'how_often_milk_or_sourmilk'] <- 'how_often_milk_or_buttermilk'
+colnames(pheno)[colnames(pheno) == 'how_often_chocomilk_sweetend_milk_drinks'] <- 'how_often_chocomilk_sweetened_milk_drinks'
 
 pheno2 = pheno[match(linkage_file2$V1, rownames(pheno)), ]
 

@@ -1,4 +1,4 @@
-# based on code by R.A.A.A. Ruigrok
+# Script written by A. Gulyaeva; based on code by R.A.A.A. Ruigrok
 
 .libPaths('/groups/umcg-tifn/tmp01/users/umcg-agulyaeva/SOFTWARE/R_LIB')
 library(foreach)
