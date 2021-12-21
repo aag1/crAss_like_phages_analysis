@@ -82,7 +82,8 @@ for (i in 1:nrow(tab)) {
     )
 
     file2 <- paste0('/data/umcg-tifn/crAss_analysis/genome_maps/ANNOTATIONS/', x, '/', x, '_', y, '_AA.fasta')
-    l <- read.fasta(file2, seqtype = 'DNA', forceDNAtolower = FALSE)
+    l <- read.fasta(file2, seqtype = 'AA')
+    l <- lapply(l, function (v) { if (v[length(v)] == '*') { v <- v[ 1:(length(v)-1) ] }; return(v) })
 
 
     P <- rownames(t)[ t[, opt$prot] != '-' ]
