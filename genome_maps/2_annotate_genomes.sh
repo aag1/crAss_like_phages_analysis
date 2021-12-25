@@ -10,7 +10,7 @@
 
 
 
-### sample ID
+### genome ID
 dir0=$(pwd)
 dir1=/data/umcg-tifn/crAss_analysis/crAss_contigs_detection
 dir2=/data/umcg-tifn/crAss_analysis/genome_maps

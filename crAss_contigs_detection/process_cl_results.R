@@ -7,7 +7,7 @@ source('/home/umcg-agulyaeva/crAss_analysis/crAss_contigs_detection/function_imp
 L <- list()
 
 tab <- read.table('NL_crAss_contigs.txt', sep = '\t', header = TRUE, stringsAsFactors = FALSE)
-L[['CRASS_DB']] <- tab$contig_name[ tab$ends_overlap == 1 ]
+L[['NL_crAss']] <- tab$contig_name[ tab$ends_overlap == 1 ]
 
 for (x in c('db146', 'db249', 'db673')) {
 
